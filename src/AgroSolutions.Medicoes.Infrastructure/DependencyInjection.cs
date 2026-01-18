@@ -1,3 +1,4 @@
+using AgroSolutions.Medicoes.Application.Interfaces.Queries;
 using AgroSolutions.Medicoes.Domain.Repositories;
 using AgroSolutions.Medicoes.Infrastructure.Database;
 using AgroSolutions.Medicoes.Infrastructure.Database.DataAccess;
@@ -16,6 +17,8 @@ public static class DependencyInjection
         services.AddScoped<IMedicaoRepository, MedicaoRepository>();
         services.AddScoped<IPropriedadeRepository, PropriedadeRepository>();
         services.AddScoped<IProdutorRepository, ProdutorRepository>();
+        services.AddScoped<IAlertaRepository, AlertaRepository>();
+        services.AddScoped<IAlertaMedicaoQueryRepository, AlertaMedicaoQueryRepository>();
 
         services.AddDbContext<AppDbContext>(options =>
         {

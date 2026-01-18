@@ -11,7 +11,8 @@ public class MedicaoEmailBuilder
         double valorMedio, 
         int horasAnalisadas,
         string nomeTalhao,
-        string nomePropriedade
+        string nomePropriedade,
+        double limiteEsperado
     )
     {
         string titulo = GetTitulo(tipoMedicao);
@@ -19,6 +20,7 @@ public class MedicaoEmailBuilder
         string descricao = GetDescricao(tipoMedicao);
 
         var valorFormatado = valorMedio.ToString("F2", CultureInfo.InvariantCulture);
+        var limiteFormatado = limiteEsperado.ToString("F2", CultureInfo.InvariantCulture);
         
         var sb = new StringBuilder();
 
@@ -75,8 +77,8 @@ public class MedicaoEmailBuilder
                             <div class='highlight'>
                                 <p><strong>Propriedade:</strong> {nomePropriedade}</p>
                                 <p><strong>Talhão:</strong> {nomeTalhao}</p>
-                                <strong>Média das últimas {horasAnalisadas} horas:</strong><br />
-                                {valorFormatado} {unidade}
+                                <p><strong>Média das últimas {horasAnalisadas} horas:</strong> {valorFormatado} {unidade}</p>
+                                <p><strong>Limite esperado:</strong> {limiteFormatado} {unidade}</p>
                             </div>
 
                             <p>Recomendado avaliar as condições do local e tomar as medidas necessárias.</p>

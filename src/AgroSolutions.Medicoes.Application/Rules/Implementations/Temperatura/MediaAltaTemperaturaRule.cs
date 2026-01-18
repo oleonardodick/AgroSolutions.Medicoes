@@ -23,6 +23,7 @@ public class MediaAltaTemperaturaRule(
 
     public async Task ValidateAsync(RegraPeriodoContext context, CancellationToken cancellationToken)
     {
+        Console.Write("Entrou na chamada da regra");
         var fim = context.DataReferencia;
         var inicio = fim.AddHours(-PERIODOHORAS);
 
@@ -49,7 +50,8 @@ public class MediaAltaTemperaturaRule(
                             media.MediaValor, 
                             PERIODOHORAS, 
                             media.NomeTalhao, 
-                            media.NomePropriedade
+                            media.NomePropriedade,
+                            LIMITE
                         )
                     );
 
