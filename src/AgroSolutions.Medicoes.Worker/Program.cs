@@ -4,8 +4,19 @@ using AgroSolutions.Medicoes.Infrastructure;
 using AgroSolutions.Medicoes.Worker;
 using AgroSolutions.Medicoes.Worker.Consumers;
 using MassTransit;
+using Serilog;
+
 
 var builder = Host.CreateApplicationBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+
+builder.Logging.AddSerilog(Log.Logger);
+
 builder.Services.AddHostedService<Worker>();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("Email"));
