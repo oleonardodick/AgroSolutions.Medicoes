@@ -1,12 +1,15 @@
+using System.Diagnostics;
 using AgroSolutions.Medicoes.Application.Rules.Schedulers;
 
 namespace AgroSolutions.Medicoes.Worker;
 
 public class Worker : BackgroundService
 {
+    private static readonly ActivitySource ActivitySource =
+        new("AgroSolutions.Medicoes.Worker");
     private readonly ILogger<Worker> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
-    private static readonly TimeSpan INTERVALO = TimeSpan.FromMinutes(30);
+    private static readonly TimeSpan INTERVALO = TimeSpan.FromMinutes(1);
 
     public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory)
     {
@@ -24,6 +27,13 @@ public class Worker : BackgroundService
         {
             try
             {
+                using var activity = ActivitySource.StartActivity(
+                    "processar-mensagens",
+                    ActivityKind.Internal
+                );
+
+                activity?.SetTag("worker.loop", true);
+                
                 _logger.LogInformation("Iniciou a execução da regra do worker.");
                 using var scope = _scopeFactory.CreateScope();
                 var scheduler = scope.ServiceProvider.GetRequiredService<IRuleScheduler>();
