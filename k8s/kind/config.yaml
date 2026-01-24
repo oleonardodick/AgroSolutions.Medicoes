@@ -20,5 +20,8 @@ nodes:
       # Grafana
       - containerPort: 30000
         hostPort: 30000
+      # PostgreSQL
+      - containerPort: 30032
+        hostPort: 30032
 
   - role: worker

@@ -63,6 +63,7 @@ bash "$ROOT_DIR/scripts/create-secrets.sh"
 log "Aplicando manifests base"
 kubectl apply -f "$ROOT_DIR/k8s/base/mailpit"
 kubectl apply -f "$ROOT_DIR/k8s/base/rabbitmq"
+kubectl apply -f "$ROOT_DIR/k8s/base/postgresql"
 kubectl create configmap grafana-datasources \
     --from-file=$ROOT_DIR/observability/grafana/provisioning/datasources.yaml \
     -n agro-medicoes \
