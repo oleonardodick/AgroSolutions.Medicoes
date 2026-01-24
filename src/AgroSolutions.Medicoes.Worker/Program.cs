@@ -1,10 +1,12 @@
 using AgroSolutions.Medicoes.Application;
 using AgroSolutions.Medicoes.Application.Services;
 using AgroSolutions.Medicoes.Infrastructure;
+using AgroSolutions.Medicoes.Infrastructure.Messaging;
 using AgroSolutions.Medicoes.Infrastructure.Observability;
 using AgroSolutions.Medicoes.Worker;
 using AgroSolutions.Medicoes.Worker.Consumers;
 using MassTransit;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
@@ -52,6 +54,9 @@ builder.Services.Configure<EmailSettings>(
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.Configure<RabbitMqSettings>(
+    builder.Configuration.GetSection("RabbitMq"));
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<SensorDataConsumer>();
@@ -61,10 +66,12 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h =>
+        var settings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+        
+        cfg.Host(settings.Host, settings.VirtualHost, h =>
         {
-            h.Username("admin");
-            h.Password("admin123");
+            h.Username(settings.Username);
+            h.Password(settings.Password);
         });
 
         cfg.ConfigureEndpoints(context);
