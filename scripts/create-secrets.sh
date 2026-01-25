@@ -55,4 +55,10 @@ kubectl create secret generic $DATABASE_SECRET \
     --from-literal=DB_NAME="$DB_NAME" \
     --dry-run=client -o yaml | kubectl apply -f -
 
+echo "🔐 Criando secret: app-connection-string"
+kubectl create secret generic app-connection-string \
+    -n $NAMESPACE \
+    --from-literal=ConnectionStrings__DefaultConnection="Host=$DB_HOST;Port=$DB_PORT;Database=$DB_NAME;Username=$DB_USER;Password=$DB_PASSWORD" \
+    --dry-run=client -o yaml | kubectl apply -f -
+
 echo "✅ Secrets aplicados com sucesso!"

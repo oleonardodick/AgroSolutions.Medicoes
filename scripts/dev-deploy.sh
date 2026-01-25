@@ -53,12 +53,22 @@ if [[ "$CURRENT_CONTEXT" != kind-* ]]; then
   error "Contexto atual ($CURRENT_CONTEXT) não é um cluster Kind"
 fi
 
+# ========= BUILD WORKER IMAGE =========
+log "Buildando imagem do worker"
+docker build -t agro-medicoes-worker:dev "$ROOT_DIR"
+
+log "Carregando imagem no Kind"
+kind load docker-image agro-medicoes-worker:dev --name "$CLUSTER_NAME"
+
 # ========= DEPLOY =========
 log "Criando namespaces"
 kubectl apply -f "$ROOT_DIR/k8s/base/namespaces"
 
 log "Criando secrets"
 bash "$ROOT_DIR/scripts/create-secrets.sh"
+
+log "Criando configmaps"
+bash "$ROOT_DIR/scripts/deploy-configmap.sh"
 
 log "Aplicando manifests base"
 kubectl apply -f "$ROOT_DIR/k8s/base/mailpit"
@@ -69,5 +79,6 @@ kubectl create configmap grafana-datasources \
     -n agro-medicoes \
     --dry-run=client -o yaml | kubectl apply -f -
 kubectl apply -f "$ROOT_DIR/k8s/base/grafana"
+kubectl apply -f "$ROOT_DIR/k8s/base/app"
 
 log "Deploy concluído com sucesso ✅"
