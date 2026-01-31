@@ -74,10 +74,6 @@ log "Aplicando manifests base"
 kubectl apply -f "$ROOT_DIR/k8s/base/mailpit"
 kubectl apply -f "$ROOT_DIR/k8s/base/rabbitmq"
 kubectl apply -f "$ROOT_DIR/k8s/base/postgresql"
-kubectl create configmap grafana-datasources \
-    --from-file=$ROOT_DIR/observability/grafana/provisioning/datasources.yaml \
-    -n agro-medicoes \
-    --dry-run=client -o yaml | kubectl apply -f -
 kubectl apply -f "$ROOT_DIR/k8s/base/grafana"
 kubectl apply -f "$ROOT_DIR/k8s/base/app"
 

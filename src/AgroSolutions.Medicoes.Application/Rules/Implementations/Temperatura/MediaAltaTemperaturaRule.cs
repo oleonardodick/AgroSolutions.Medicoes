@@ -20,9 +20,10 @@ public class MediaAltaTemperaturaRule(
 {
     private const int PERIODOHORAS = 6;
     private const double LIMITE = 30;
+    private const TipoAlerta TIPOALERTA = TipoAlerta.Alta_Temperatura;
 
     public bool IsApplicable(RegraPeriodoContext context)
-        => context.Tipo == TipoMedicao.Temperatura;
+        => context.TipoMedicao == TipoMedicao.Temperatura;
 
     public async Task ValidateAsync(RegraPeriodoContext context, CancellationToken cancellationToken)
     {
@@ -36,7 +37,7 @@ public class MediaAltaTemperaturaRule(
             fim
         );
 
-        var mediasTemperatura = await _alertaMedicaoQueryRepository.ObtemMedicaoMediaAsync(context.Tipo, inicio, fim, cancellationToken);
+        var mediasTemperatura = await _alertaMedicaoQueryRepository.ObtemMedicaoMediaAsync(context.TipoMedicao, inicio, fim, cancellationToken);
 
         foreach(var media in mediasTemperatura)
         {
@@ -52,7 +53,7 @@ public class MediaAltaTemperaturaRule(
                 var enviouAlerta = await _alertaRepository.ExistsAsync(
                     media.IdTalhao, 
                     inicio, 
-                    context.Tipo, 
+                    TIPOALERTA, 
                     cancellationToken
                 );
 
@@ -62,7 +63,7 @@ public class MediaAltaTemperaturaRule(
                         media.EmailProdutor, 
                         "Alerta de medição", 
                         MedicaoEmailBuilder.Build(
-                            context.Tipo, 
+                            TIPOALERTA, 
                             media.MediaValor, 
                             PERIODOHORAS, 
                             media.NomeTalhao, 
@@ -71,7 +72,7 @@ public class MediaAltaTemperaturaRule(
                         )
                     );
 
-                    await _alertaRepository.AddAsync(new Alerta(media.IdTalhao, DateTime.UtcNow, context.Tipo), cancellationToken);
+                    await _alertaRepository.AddAsync(new Alerta(media.IdTalhao, DateTime.UtcNow, TIPOALERTA), cancellationToken);
                 }                
             }
         }

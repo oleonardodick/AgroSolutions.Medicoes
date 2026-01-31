@@ -7,7 +7,7 @@ namespace AgroSolutions.Medicoes.Application.Builders;
 public class MedicaoEmailBuilder
 {
     public static string Build(
-        TipoMedicao tipoMedicao, 
+        TipoAlerta tipoAlerta, 
         double valorMedio, 
         int horasAnalisadas,
         string nomeTalhao,
@@ -15,9 +15,9 @@ public class MedicaoEmailBuilder
         double limiteEsperado
     )
     {
-        string titulo = GetTitulo(tipoMedicao);
-        string unidade = GetUnidade(tipoMedicao);
-        string descricao = GetDescricao(tipoMedicao);
+        string titulo = GetTitulo(tipoAlerta);
+        string unidade = GetUnidade(tipoAlerta);
+        string descricao = GetDescricao(tipoAlerta);
 
         var valorFormatado = valorMedio.ToString("F2", CultureInfo.InvariantCulture);
         var limiteFormatado = limiteEsperado.ToString("F2", CultureInfo.InvariantCulture);
@@ -95,38 +95,44 @@ public class MedicaoEmailBuilder
         return sb.ToString().Trim();
     }
 
-    private static string GetUnidade(TipoMedicao tipo)
+    private static string GetUnidade(TipoAlerta tipo)
     {
         return tipo switch
         {
-            TipoMedicao.Temperatura => "°C",
-            TipoMedicao.Umidade => "%",
-            TipoMedicao.Precipitacao => "mm",
+            TipoAlerta.Alta_Temperatura or TipoAlerta.Baixa_Temperatura => "°C",
+            TipoAlerta.Alta_Umidade or TipoAlerta.Baixa_Umidade => "%",
+            TipoAlerta.Excesso_chuva or TipoAlerta.Seca => "mm",
             _ => string.Empty
         };
     }
 
-    private static string GetTitulo(TipoMedicao tipo)
+    private static string GetTitulo(TipoAlerta tipo)
     {
         return tipo switch
         {
-            TipoMedicao.Temperatura => "Alerta de altas temperaturas.",
-            TipoMedicao.Umidade => "Alerta de seca.",
-            TipoMedicao.Precipitacao => "Alerta de enchente.",
+            TipoAlerta.Alta_Temperatura or TipoAlerta.Baixa_Temperatura => "Alerta de altas temperaturas.",
+            TipoAlerta.Alta_Umidade or TipoAlerta.Baixa_Umidade => "Alerta de seca.",
+            TipoAlerta.Excesso_chuva or TipoAlerta.Seca => "Alerta de enchente.",
             _ => string.Empty
         };
     }
 
-    private static string GetDescricao(TipoMedicao tipo)
+    private static string GetDescricao(TipoAlerta tipo)
     {
         return tipo switch
         {
-            TipoMedicao.Temperatura => 
+            TipoAlerta.Alta_Temperatura => 
                 "A temperatura média registrada pelos sensores está acima do limite esperado.",
-            TipoMedicao.Umidade => 
+            TipoAlerta.Baixa_Temperatura =>
+                "A temperatura média registrada pelos sensores está abaixo do limite esperado.",
+            TipoAlerta.Alta_Umidade => 
+                "A média da umidade registrada pelos sensores está acima do limite esperado.",
+            TipoAlerta.Baixa_Umidade => 
                 "A média da umidade registrada pelos sensores está abaixo do limite esperado.",
-            TipoMedicao.Precipitacao =>
+            TipoAlerta.Excesso_chuva =>
                 "A precipitação média registrada pelos sensores está acima do limite esperado.",
+            TipoAlerta.Seca =>
+                "A precipitação média registrada pelos sensores está abaixo do limite esperado.",
             _ => string.Empty
         };
     }
