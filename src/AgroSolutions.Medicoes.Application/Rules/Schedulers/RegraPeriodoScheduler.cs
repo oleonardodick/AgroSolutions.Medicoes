@@ -14,7 +14,7 @@ public class RegraPeriodoScheduler(IEnumerable<IRule<RegraPeriodoContext>> _rule
         foreach(var tipo in Enum.GetValues<TipoMedicao>())
         {
             var context = new RegraPeriodoContext(
-                Tipo: tipo,
+                TipoMedicao: tipo,
                 DataReferencia: dataReferencia
             );
 

@@ -4,6 +4,6 @@ namespace AgroSolutions.Medicoes.Application.Rules.Contexts;
 
 public record RegraPeriodoContext
 (
-    TipoMedicao Tipo,
+    TipoMedicao TipoMedicao,
     DateTime DataReferencia
 );

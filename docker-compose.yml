@@ -1,40 +1,40 @@
 services:
-  worker:
-    image: agro-solutions-medicoes
-    container_name: medicoes-worker
-    restart: unless-stopped
+  # worker:
+  #   image: agro-solutions-medicoes
+  #   container_name: medicoes-worker
+  #   restart: unless-stopped
 
-    environment:
-      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-      ConnectionStrings__DefaultConnection: >
-        Host=${DB_HOST};
-        Port=${DB_PORT};
-        Database=${DB_NAME};
-        Username=${DB_USER};
-        Password=${DB_PASSWORD}
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+  #     ConnectionStrings__DefaultConnection: >
+  #       Host=${DB_HOST};
+  #       Port=${DB_PORT};
+  #       Database=${DB_NAME};
+  #       Username=${DB_USER};
+  #       Password=${DB_PASSWORD}
 
-      RabbitMq__Host: ${RABBITMQ_HOST}
-      RabbitMq__Port: ${RABBITMQ_PORT}
-      RabbitMq__Username: ${RABBITMQ_USER}
-      RabbitMq__Password: ${RABBITMQ_PASSWORD}
+  #     RabbitMq__Host: ${RABBITMQ_HOST}
+  #     RabbitMq__Port: ${RABBITMQ_PORT}
+  #     RabbitMq__Username: ${RABBITMQ_USER}
+  #     RabbitMq__Password: ${RABBITMQ_PASSWORD}
 
-      Email__Host: ${EMAIL_HOST}
-      Email__Port: ${EMAIL_PORT}
-      Email__UseSsl: ${EMAIL_USE_SSL}
-      Email__From: ${EMAIL_FROM}
+  #     Email__Host: ${EMAIL_HOST}
+  #     Email__Port: ${EMAIL_PORT}
+  #     Email__UseSsl: ${EMAIL_USE_SSL}
+  #     Email__From: ${EMAIL_FROM}
 
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      otel-collector:
-        condition: service_started
-      mailpit:
-        condition: service_started
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     postgres:
+  #       condition: service_healthy
+  #     otel-collector:
+  #       condition: service_started
+  #     mailpit:
+  #       condition: service_started
 
-    networks:
-      - monitoring
+  #   networks:
+  #     - monitoring
 
   postgres:
     image: postgres:16-alpine
@@ -57,39 +57,39 @@ services:
       retries: 5
       start_period: 10s
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    restart: unless-stopped
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-    ports:
-      - "5672:5672"   # AMQP protocol
-      - "15672:15672" # Management UI
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    networks:
-      - monitoring
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   container_name: rabbitmq
+  #   restart: unless-stopped
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+  #     RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+  #   ports:
+  #     - "5672:5672"   # AMQP protocol
+  #     - "15672:15672" # Management UI
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq
+  #   networks:
+  #     - monitoring
+  #   healthcheck:
+  #     test: ["CMD", "rabbitmq-diagnostics", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.91.0
-    container_name: otel-collector
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    volumes:
-      - ./observability/configs/otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP HTTP receiver
-      - "8888:8888"   # Prometheus metrics exposed by the collector
-      - "8889:8889"   # Prometheus exporter metrics
-    networks:
-      - monitoring
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:0.91.0
+  #   container_name: otel-collector
+  #   command: ["--config=/etc/otel-collector-config.yaml"]
+  #   volumes:
+  #     - ./observability/configs/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+  #   ports:
+  #     - "4317:4317"   # OTLP gRPC receiver
+  #     - "4318:4318"   # OTLP HTTP receiver
+  #     - "8888:8888"   # Prometheus metrics exposed by the collector
+  #     - "8889:8889"   # Prometheus exporter metrics
+  #   networks:
+  #     - monitoring
 
   # loki:
   #   image: grafana/loki:2.9.3
@@ -144,7 +144,6 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./observability/grafana/provisioning/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     networks:
       - monitoring
     depends_on:
@@ -153,19 +152,19 @@ services:
       # - tempo
       # - prometheus
 
-  mailpit:
-    image: axllent/mailpit:latest
-    container_name: mailpit
-    ports:
-      - "8025:8025"  # Interface web
-      - "1025:1025"  # SMTP server
-    networks:
-      - monitoring
-    restart: unless-stopped
+  # mailpit:
+  #   image: axllent/mailpit:latest
+  #   container_name: mailpit
+  #   ports:
+  #     - "8025:8025"  # Interface web
+  #     - "1025:1025"  # SMTP server
+  #   networks:
+  #     - monitoring
+  #   restart: unless-stopped
 
 volumes:
   postgres_data:
-  rabbitmq_data:
+  # rabbitmq_data:
   # loki_data:
   # prometheus_data:
   # tempo_data:

@@ -14,7 +14,7 @@ public class AlertaRepository(AppDbContext _db) : IAlertaRepository
         await _db.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<bool> ExistsAsync(Guid idTalhao, DateTime dataCorte, TipoMedicao tipo, CancellationToken cancellationToken)
+    public async Task<bool> ExistsAsync(Guid idTalhao, DateTime dataCorte, TipoAlerta tipo, CancellationToken cancellationToken)
     {
         return await _db.Alertas.AnyAsync(a =>
             a.IdTalhao == idTalhao &&

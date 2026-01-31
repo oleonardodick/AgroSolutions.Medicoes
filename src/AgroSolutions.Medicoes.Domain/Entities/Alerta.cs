@@ -7,11 +7,11 @@ public class Alerta : Base
 {
     public Guid IdTalhao { get; private set; }
     public DateTime DataAlerta { get; private set; }
-    public TipoMedicao Tipo { get; private set; }
+    public TipoAlerta Tipo { get; private set; }
 
     protected Alerta() { }
 
-    public Alerta(Guid idTalhao, DateTime dataAlerta, TipoMedicao tipo)
+    public Alerta(Guid idTalhao, DateTime dataAlerta, TipoAlerta tipo)
     :base(Guid.NewGuid())
     {
         DefinirTalhao(idTalhao);
@@ -35,9 +35,9 @@ public class Alerta : Base
         DataAlerta = dataAlerta;
     }
 
-    public void DefinirTipo(TipoMedicao tipo)
+    public void DefinirTipo(TipoAlerta tipo)
     {
-        if(!Enum.IsDefined(typeof(TipoMedicao), tipo))
+        if(!Enum.IsDefined(typeof(TipoAlerta), tipo))
             throw new DomainException("Tipo de alerta inválido.");
 
         Tipo = tipo;

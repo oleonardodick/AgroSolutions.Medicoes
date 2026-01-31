@@ -7,5 +7,5 @@ public interface IAlertaRepository
 {
     Task AddAsync(Alerta alerta, CancellationToken cancellationToken);
 
-    Task<bool> ExistsAsync(Guid idTalhao, DateTime dataCorte, TipoMedicao tipo, CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(Guid idTalhao, DateTime dataCorte, TipoAlerta tipo, CancellationToken cancellationToken);
 }

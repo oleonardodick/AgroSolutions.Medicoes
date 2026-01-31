@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'agro-dashboards'
+    orgId: 1
+    folder: 'Agro'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

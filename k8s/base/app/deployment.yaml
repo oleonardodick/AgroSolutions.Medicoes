@@ -17,6 +17,17 @@ spec:
     spec:
       terminationGracePeriodSeconds: 30
       initContainers:
+        - name: wait-for-mailpit
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z mailpit 1025; do
+                echo "⏳ Aguardando MailPit..."
+                sleep 2
+              done
+              
         - name: wait-for-postgres
           image: postgres:16-alpine
           command:
@@ -36,17 +47,6 @@ spec:
             - |
               until nc -z rabbitmq 5672; do
                 echo "⏳ Aguardando RabbitMQ..."
-                sleep 2
-              done
-
-        - name: wait-for-mailpit
-          image: busybox:1.36
-          command:
-            - sh
-            - -c
-            - |
-              until nc -z mailpit 1025; do
-                echo "⏳ Aguardando MailPit..."
                 sleep 2
               done
               
